@@ -186,7 +186,7 @@ Uh oh.  This won't work, because if we don't specify the folder name, rails will
 
 `app/views/posts/show.html.erb`
 ```erb
-<%= render 'posts/author' %>
+<%= render 'authors/author' %>
 
 <h1><%= @post.title %></h1>
 <p><%= @post.description %></p>
@@ -205,3 +205,5 @@ Change the `posts#show` action in the controller to look like the following:
 ```
 
 And now we are done! Whew!
+
+<a href='https://learn.co/lessons/simple-partials-reading' data-visibility='hidden'>View this lesson on Learn.co</a>
