@@ -19,16 +19,27 @@ describe 'navigate' do
     visit "/posts/#{@post.id}"
     expect(page).to have_css("p", text: "My post desc")
   end
+
+  it 'shows the footer on the page' do 
+    visit "/posts/#{@post.id}"
+    expect(page).to have_css("footer", text:"© Flatiron School")
+  end
 end
 
 describe 'form' do
+
+  it 'shows the footer on the page' do 
+    visit new_post_path
+    expect(page).to have_css("footer", text:"© Flatiron School")
+  end
+
   it 'shows a new form that submits content and redirects and prints out params' do
     visit new_post_path
 
     fill_in 'title', with: "My post title"
     fill_in 'description', with: "My post description"
 
-    click_on "Submit Post"
+    click_on "Submit"
 
     expect(page).to have_content("My post title")
   end
@@ -38,11 +49,25 @@ describe 'form' do
 
     visit edit_post_path(@post)
 
-    fill_in 'post[title]', with: "My edit"
-    fill_in 'post[description]', with: "My post description"
+    fill_in 'title', with: "My edit"
+    fill_in 'description', with: "My post description"
 
-    click_on "Update Post"
+    click_on "Submit"
 
     expect(page).to have_content("My edit")
+  end
+
+  describe 'index' do 
+    it 'shows the footer on the page' do 
+      visit new_post_path
+      expect(page).to have_css("footer", text:"© Flatiron School")
+    end
+  end
+
+  describe 'show' do 
+    it 'shows the footer on the page' do 
+      visit new_post_path
+      expect(page).to have_css("footer", text:"© Flatiron School")
+    end
   end
 end
