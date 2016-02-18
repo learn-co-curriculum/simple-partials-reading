@@ -15,7 +15,7 @@ Let's look at an example to see what this means.
 
 ## Example
 
-Take a look at the code above.
+Take a look at the code below.
 
 This is the code in the new form app/views/posts/new.html.erb
 ```erb
