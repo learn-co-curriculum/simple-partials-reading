@@ -15,7 +15,7 @@ Let's look at an example to see what this means.
 
 ## Example
 
-Take a look at the code above.
+Take a look at the code below.
 
 This is the code in the new form app/views/posts/new.html.erb
 ```erb
@@ -26,7 +26,7 @@ This is the code in the new form app/views/posts/new.html.erb
   <label>Post Description</label><br>
   <%= text_area_tag :description %><br>
 
-  <%= submit_tag "Submit Post" %>
+  <%= submit_tag "Submit" %>
 <% end %>
 ```
 And this is the code in the edit file app/views/posts/edit.html.erb
@@ -41,7 +41,7 @@ And this is the code in the edit file app/views/posts/edit.html.erb
   <label>Post Description</label><br>
   <%= text_area_tag :description %><br>
 
-  <%= submit_tag "Submit Post" %>
+  <%= submit_tag "Submit" %>
 <% end %>
 ```
 Except for the first line of the form, the code is pretty much the same!  The labels and field tags are the same.  All of that duplication is not good in code. Duplication means twice the amount of code to maintain, twice the opportunity for bugs, and two differing forms where our interface should be consistent.  
@@ -79,7 +79,7 @@ First, we'll place the duplicated code in a new file called `app/views/posts/_fo
   <label>Post Description</label><br>
   <%= text_area_tag :description %><br>
 
-  <%= submit_tag "Submit Post" %>
+  <%= submit_tag "Submit" %>
 ```
 Now we need to render the code into the posts/edit and posts/new pages by using placing `<%= render "form" %>` where we want the code in the partial to be rendered.  Notice that while the file name of our partial starts with an underscore, when we reference our partial there is no underscore.  
 
@@ -110,7 +110,7 @@ Finally, our partial, the posts/form file looks like the following:
 <label>Post Description</label><br>
 <%= text_area_tag :description %><br>
 
-<%= submit_tag "Submit Post" %>
+<%= submit_tag "Submit" %>
 ```
 
 Ok - all done!
@@ -126,57 +126,33 @@ Let's do this now.
 
 ## Rendering a partial from a different file
 
-Let's take a look at our `authors/show.html.erb` file.
+Let's take a look at all of the files inside our `app/views/posts` directory. You'll notice that `edit.html.erb`, `index.html.erb`, `new.html.erb` and `show.html.erb` all have footers at the bottom of the page
 
-```erb
-<%= @author.name %>
-<%= @author.hometown %>
+```html
+<footer>
+  © Flatiron School
+</footer>
 ```
 
-And now look at the code in `posts/show.html.erb`
+See the repetition?  In all four files, we have the same three lines of code repeated. Let's go ahead and extract that out into a partial.
 
-```erb
-<%= @post.author.name %>
-<%= @post.author.hometown %>
-
-<h1><%= @post.title %></h1>
-<p><%= @post.description %></p>
-```
-
-See the repetition?  In both places we are using the author object to call the name and hometown methods.  The first thing we have to fix is the slight difference between the templates.  Let's make the beginning portion of the posts show template match the authors show template.
-
-`posts/show.html.erb`
-
-```erb
-<%= @author.name %>
-<%= @author.hometown %>
-
-<h1><%= @post.title %></h1>
-<p><%= @post.description %></p>
-```
-
-Then let's make a new partial called `app/views/authors/_author.html.erb` and place the repeated code in the
+Let's make a new partial called `app/views/layouts/_footer.html.erb` and place the repeated code in the
 file so that it looks like the following:
 
-`app/views/authors/_author.html.erb`
-```erb
-<%= @author.name %>
-<%= @author.hometown %>
+`app/views/layout/_footer.html.erb`
+```html
+<footer>
+  © Flatiron School
+</footer>
 ```
 
-Now we can just render this partial in our authors/show page by doing the following:
+Now we can just render this partial in all the posts pages by doing the following:
 
-`app/views/authors/show.html.erb`
-```erb
-<%= render 'author' %>
-```
-
-We can make the same change in `app/views/posts/show.html.erb`
 
 
 `app/views/posts/show.html.erb`
 ```erb
-<%= render 'author' %>
+<%= render 'footer' %>
 
 <h1><%= @post.title %></h1>
 <p><%= @post.description %></p>
@@ -186,24 +162,12 @@ Uh oh.  This won't work, because if we don't specify the folder name, rails will
 
 `app/views/posts/show.html.erb`
 ```erb
-<%= render 'authors/author' %>
+<%= render 'layout/footer' %>
 
 <h1><%= @post.title %></h1>
 <p><%= @post.description %></p>
 ```
 
-We're almost there!  One more problem is that our partial assumes there is an instance variable called @author.  It needs it to work!  We'll need to change the posts controller to have it set an instance variable called @author.
-
-Change the `posts#show` action in the controller to look like the following:
-
-`app/views/posts/show.html.erb`
-```ruby
-  def show
-    @post = Post.find(params[:id])
-    @author = @post.author
-  end
-```
-
-And now we are done! Whew!
+Make sure you make the changes in all the posts views.
 
 <p data-visibility='hidden'>View <a href='https://learn.co/lessons/simple-partials-reading' title='Objectives'>Objectives</a> on Learn.co and start learning to code for free.</p>
